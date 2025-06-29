@@ -76,7 +76,6 @@ export const getIngredientsApi = () =>
     .then((res) => checkResponse<TIngredientsResponse>(res))
     .then((data) => {
       if (data?.success) {
-        console.log('Полный ответ сервера:', data); // Смотрим структуру
         return data.data;
       }
       return Promise.reject(data);
