@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { Preloader } from '@ui';
-import { useSelector } from '../../services/store';
-import { selectUser, selectIsAuthChecked } from '../../services/slices/user';
+import { useSelector } from '../../store/store';
+import { selectUser, selectIsAuthChecked } from '../../store/slices/user-slice';
 import { getCookie } from '../../utils/cookie';
 
 export type TProtectedRouteProps = {
@@ -18,23 +18,26 @@ export const ProtectedRoute = ({
   const isAuthChecked = useSelector(selectIsAuthChecked);
   const location = useLocation();
   const hasToken = Boolean(getCookie('accessToken'));
-  console.log('[ProtectedRoute]', { user, isAuthChecked, onlyUnAuth });
+  console.log('[ProtectedRoute]', {
+    user,
+    isAuthChecked,
+    onlyUnAuth,
+    hasToken
+  });
 
   if (onlyUnAuth) {
-    if (isAuthChecked && user) {
-      const from = location.state?.from || { pathname: '/' };
-      return <Navigate to={from} replace />;
+    if (!hasToken || (isAuthChecked && !user)) {
+      return children || <Outlet />;
     }
-    return children || <Outlet />;
+    if (hasToken && !isAuthChecked) {
+      return <Preloader />;
+    }
+    return <Navigate to={location.state?.from || '/'} replace />;
   }
 
   if (hasToken && !isAuthChecked) {
     return <Preloader />;
   }
 
-  return user ? (
-    children || <Outlet />
-  ) : (
-    <Navigate to='/login' state={{ from: location }} replace />
-  );
+  return user ? children || <Outlet /> : <Navigate to='/login' replace />;
 };

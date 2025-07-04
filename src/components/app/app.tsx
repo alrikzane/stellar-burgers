@@ -19,8 +19,8 @@ import {
   OrderInfo,
   ProtectedRoute
 } from '@components';
-import { useDispatch } from '../../services/store';
-import { checkUserAuth } from '../../services/slices/user';
+import { useDispatch } from '../../store/store';
+import { checkUserAuth } from '../../store/slices/user-slice';
 import { getCookie, deleteCookie } from '../../utils/cookie';
 
 const App = () => {
@@ -28,6 +28,10 @@ const App = () => {
   /* TODO modals  const location = useLocation();
   const backgroundLocation = location.state?.background; */
   const token = getCookie('accessToken');
+
+  useEffect(() => {
+    dispatch(checkUserAuth());
+  }, [dispatch]);
 
   useEffect(() => {
     if (token) {

@@ -27,7 +27,6 @@ const initialState: TUserState = {
   error: null
 };
 
-// Auth check
 export const checkUserAuth = createAsyncThunk(
   'user/checkAuth',
   async (_, { dispatch }) => {
@@ -48,14 +47,20 @@ export const checkUserAuth = createAsyncThunk(
     } catch (error) {
       deleteCookie('accessToken');
       localStorage.removeItem('refreshToken');
-      return null;
+      throw error;
     }
   }
 );
 
 export const refreshTokenAction = createAsyncThunk(
   'user/refreshToken',
-  async () => await refreshToken()
+  async (_, { rejectWithValue }) => {
+    try {
+      return await refreshToken();
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
 );
 
 export const registerUser = createAsyncThunk(
@@ -103,6 +108,9 @@ const userSlice = createSlice({
   reducers: {
     resetError: (state) => {
       state.error = null;
+    },
+    setAuthChecked: (state, action) => {
+      state.isAuthChecked = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -119,6 +127,7 @@ const userSlice = createSlice({
       .addCase(checkUserAuth.rejected, (state) => {
         state.isLoading = false;
         state.isAuthChecked = true;
+        state.user = null;
       })
 
       // register
@@ -132,7 +141,7 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка регистрации';
+        state.error = action.error.message || 'Error during registration';
       })
 
       // logIn
@@ -146,7 +155,7 @@ const userSlice = createSlice({
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Ошибка авторизации';
+        state.error = action.error.message || 'Error during login';
       })
 
       // logOut
@@ -184,7 +193,7 @@ const userSlice = createSlice({
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message || 'Failed to update user';
+        state.error = action.error.message || 'Error during update user data';
       });
   }
 });
