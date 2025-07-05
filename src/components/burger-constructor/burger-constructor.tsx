@@ -5,12 +5,7 @@ import { useSelector, useDispatch } from '../../store/store';
 import {
   selectConstructorState,
   selectOrderState,
-  selectDefaultBun,
-  createOrder,
-  clearConstructor,
-  moveIngredient,
-  removeIngredient,
-  addIngredient
+  createOrder
 } from '../../store/slices/burger-slice';
 
 export const BurgerConstructor: FC = () => {
@@ -19,18 +14,6 @@ export const BurgerConstructor: FC = () => {
   const { bun, ingredients } = useSelector(selectConstructorState);
   const { status: orderStatus, data: orderData } =
     useSelector(selectOrderState);
-
-  const handleMoveUp = (index: number) => {
-    if (index > 0) {
-      dispatch(moveIngredient(index, index - 1));
-    }
-  };
-
-  const handleMoveDown = (index: number) => {
-    if (index < ingredients.length - 1) {
-      dispatch(moveIngredient(index, index + 1));
-    }
-  };
 
   const onOrderClick = () => {
     if (!bun || orderStatus === 'loading') return;
