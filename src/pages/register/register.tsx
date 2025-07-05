@@ -25,7 +25,6 @@ export const Register: FC = () => {
     )
       .unwrap()
       .then(() => {
-        console.log('success');
         navigate('/');
       });
   };

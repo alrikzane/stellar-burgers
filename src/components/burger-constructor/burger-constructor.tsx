@@ -1,43 +1,63 @@
-import { FC, useMemo } from 'react';
+import { FC, useMemo, useEffect } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
+import { useSelector, useDispatch } from '../../store/store';
+import {
+  selectConstructorState,
+  selectOrderState,
+  selectDefaultBun,
+  createOrder,
+  clearConstructor,
+  moveIngredient,
+  removeIngredient,
+  addIngredient
+} from '../../store/slices/burger-slice';
 
 export const BurgerConstructor: FC = () => {
-  /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */
-  const constructorItems = {
-    bun: {
-      price: 0
-    },
-    ingredients: []
+  const dispatch = useDispatch();
+
+  const { bun, ingredients } = useSelector(selectConstructorState);
+  const { status: orderStatus, data: orderData } =
+    useSelector(selectOrderState);
+
+  const handleMoveUp = (index: number) => {
+    if (index > 0) {
+      dispatch(moveIngredient(index, index - 1));
+    }
   };
 
-  const orderRequest = false;
-
-  const orderModalData = null;
+  const handleMoveDown = (index: number) => {
+    if (index < ingredients.length - 1) {
+      dispatch(moveIngredient(index, index + 1));
+    }
+  };
 
   const onOrderClick = () => {
-    if (!constructorItems.bun || orderRequest) return;
+    if (!bun || orderStatus === 'loading') return;
+
+    const ingredientIds = [
+      bun._id,
+      ...ingredients.map((item) => item._id),
+      bun._id
+    ];
+    dispatch(createOrder(ingredientIds));
   };
+
   const closeOrderModal = () => {};
 
   const price = useMemo(
     () =>
-      (constructorItems.bun ? constructorItems.bun.price * 2 : 0) +
-      constructorItems.ingredients.reduce(
-        (s: number, v: TConstructorIngredient) => s + v.price,
-        0
-      ),
-    [constructorItems]
+      (bun ? bun.price * 2 : 0) +
+      ingredients.reduce((sum, item) => sum + item.price, 0),
+    [bun, ingredients]
   );
-
-  return null;
 
   return (
     <BurgerConstructorUI
       price={price}
-      orderRequest={orderRequest}
-      constructorItems={constructorItems}
-      orderModalData={orderModalData}
+      orderRequest={orderStatus === 'loading'}
+      constructorItems={{ bun, ingredients }}
+      orderModalData={orderData}
       onOrderClick={onOrderClick}
       closeOrderModal={closeOrderModal}
     />

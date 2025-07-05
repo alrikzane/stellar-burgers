@@ -19,18 +19,36 @@ import {
   OrderInfo,
   ProtectedRoute
 } from '@components';
-import { useDispatch } from '../../store/store';
+import { useDispatch, useSelector } from '../../store/store';
 import { checkUserAuth } from '../../store/slices/user-slice';
+import {
+  fetchIngredients,
+  selectDefaultBun,
+  addIngredient,
+  selectConstructorState
+} from '../../store/slices/burger-slice';
 import { getCookie, deleteCookie } from '../../utils/cookie';
 
 const App = () => {
   const dispatch = useDispatch();
+  const { bun, ingredients } = useSelector(selectConstructorState);
+  const defaultBun = useSelector(selectDefaultBun);
+
+  useEffect(() => {
+    if (defaultBun && !bun) {
+      dispatch(addIngredient(defaultBun));
+    }
+  }, [defaultBun, bun, dispatch]);
   /* TODO modals  const location = useLocation();
   const backgroundLocation = location.state?.background; */
   const token = getCookie('accessToken');
 
   useEffect(() => {
     dispatch(checkUserAuth());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   useEffect(() => {

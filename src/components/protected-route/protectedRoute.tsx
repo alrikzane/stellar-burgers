@@ -18,12 +18,6 @@ export const ProtectedRoute = ({
   const isAuthChecked = useSelector(selectIsAuthChecked);
   const location = useLocation();
   const hasToken = Boolean(getCookie('accessToken'));
-  console.log('[ProtectedRoute]', {
-    user,
-    isAuthChecked,
-    onlyUnAuth,
-    hasToken
-  });
 
   if (onlyUnAuth) {
     if (!hasToken || (isAuthChecked && !user)) {
