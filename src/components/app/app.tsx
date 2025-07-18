@@ -9,7 +9,7 @@ import {
   Register,
   ResetPassword
 } from '@pages';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import '../../index.css';
 import styles from './app.module.css';
@@ -17,7 +17,8 @@ import {
   AppHeader,
   IngredientDetails,
   OrderInfo,
-  ProtectedRoute
+  ProtectedRoute,
+  Modal
 } from '@components';
 import { useDispatch, useSelector } from '../../store/store';
 import { checkUserAuth } from '../../store/slices/user-slice';
@@ -39,8 +40,9 @@ const App = () => {
       dispatch(addIngredient(defaultBun));
     }
   }, [defaultBun, bun, dispatch]);
-  /* TODO modals  const location = useLocation();
-  const backgroundLocation = location.state?.background; */
+  const location = useLocation();
+  const navigate = useNavigate();
+  const backgroundLocation = location.state?.background;
   const token = getCookie('accessToken');
 
   useEffect(() => {
@@ -62,130 +64,56 @@ const App = () => {
     }
   }, [dispatch, token]);
   return (
-    <Routes>
-      {/* public */}
-      <Route
-        path='*'
-        element={
-          <div className={styles.app}>
-            <AppHeader />
-            <NotFound404 />
-          </div>
-        }
-      />
+    <div className={styles.app}>
+      <AppHeader />
+      <Routes location={backgroundLocation || location}>
+        {/* public */}
+        <Route path='*' element={<NotFound404 />} />
+        <Route path='/' element={<ConstructorPage />} />
+        <Route path='/feed' element={<Feed />} />
 
-      <Route
-        path='/'
-        element={
-          <div className={styles.app}>
-            <AppHeader />
-            <ConstructorPage />
-          </div>
-        }
-      />
+        {/* unauthorized */}
+        <Route element={<ProtectedRoute onlyUnAuth />}>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/forgot-password' element={<ForgotPassword />} />
+          <Route path='/reset-password' element={<ResetPassword />} />
+        </Route>
+        {/* authorized */}
+        <Route element={<ProtectedRoute />}>
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile/orders' element={<ProfileOrders />} />
+        </Route>
 
-      <Route
-        path='/feed'
-        element={
-          <div className={styles.app}>
-            <AppHeader />
-            <Feed />
-          </div>
-        }
-      />
+        {/* modals */}
+        <Route path='/feed/:number' element={<OrderInfo />} />
+        <Route path='/ingredients/:id' element={<IngredientDetails />} />
+        <Route path='/profile/orders/:number' element={<OrderInfo />} />
+      </Routes>
 
-      {/* unauthorized */}
-      <Route element={<ProtectedRoute onlyUnAuth />}>
-        <Route
-          path='/login'
-          element={
-            <div className={styles.app}>
-              <AppHeader />
-              <Login />
-            </div>
-          }
-        />
-        <Route
-          path='/register'
-          element={
-            <div className={styles.app}>
-              <AppHeader />
-              <Register />
-            </div>
-          }
-        />
-        <Route
-          path='/forgot-password'
-          element={
-            <div className={styles.app}>
-              <AppHeader />
-              <ForgotPassword />
-            </div>
-          }
-        />
-        <Route
-          path='/reset-password'
-          element={
-            <div className={styles.app}>
-              <AppHeader />
-              <ResetPassword />
-            </div>
-          }
-        />
-      </Route>
-      {/* authorized */}
-      <Route element={<ProtectedRoute />}>
-        <Route
-          path='/profile'
-          element={
-            <div className={styles.app}>
-              <AppHeader />
-              <Profile />
-            </div>
-          }
-        />
-        <Route
-          path='/profile/orders'
-          element={
-            <div className={styles.app}>
-              <AppHeader />
-              <ProfileOrders />
-            </div>
-          }
-        />
-      </Route>
-
-      {/* modals */}
-      <Route
-        path='/feed/:number'
-        element={
-          <div className={styles.app}>
-            <AppHeader />
-            <OrderInfo />
-          </div>
-        }
-      />
-
-      <Route
-        path='/ingredients/:id'
-        element={
-          <div className={styles.app}>
-            <AppHeader />
-            <IngredientDetails />
-          </div>
-        }
-      />
-
-      <Route
-        path='/profile/orders/:number'
-        element={
-          <div className={styles.app}>
-            <AppHeader />
-            <OrderInfo />
-          </div>
-        }
-      />
-    </Routes>
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='/ingredients/:id'
+            element={
+              location.state?.ingredient ? (
+                <Modal
+                  title='Описание ингредиента'
+                  onClose={() => {
+                    navigate(backgroundLocation.pathname, {
+                      state: backgroundLocation.state,
+                      replace: true
+                    });
+                  }}
+                >
+                  <IngredientDetails />
+                </Modal>
+              ) : null
+            }
+          />
+        </Routes>
+      )}
+    </div>
   );
 };
 export default App;

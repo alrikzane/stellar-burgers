@@ -1,7 +1,6 @@
 import React, { FC, memo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styles from './burger-ingredient.module.css';
-
 import {
   Counter,
   CurrencyIcon,
@@ -11,15 +10,32 @@ import {
 import { TBurgerIngredientUIProps } from './type';
 
 export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
-  ({ ingredient, count, handleAdd, locationState }) => {
+  ({ ingredient, count, handleAdd }) => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const { image, price, name, _id } = ingredient;
+
+    const handleIngredientClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      navigate(`/ingredients/${_id}`, {
+        state: {
+          background: {
+            pathname: location.pathname,
+            state: location.state
+          },
+          ingredient
+        },
+        replace: true
+      });
+    };
 
     return (
       <li className={styles.container}>
         <Link
           className={styles.article}
           to={`/ingredients/${_id}`}
-          state={locationState}
+          state={{ background: location, ingredient }}
+          onClick={handleIngredientClick}
         >
           {count && <Counter count={count} />}
           <img className={styles.img} src={image} alt='картинка ингредиента.' />

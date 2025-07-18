@@ -23,6 +23,7 @@ type TBurgerState = {
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     data: TOrder | null;
   };
+  currentIngredient: TIngredient | null;
 };
 
 const initialState: TBurgerState = {
@@ -39,7 +40,8 @@ const initialState: TBurgerState = {
   order: {
     status: 'idle',
     data: null
-  }
+  },
+  currentIngredient: null
 };
 
 export const fetchIngredients = createAsyncThunk(
@@ -92,6 +94,12 @@ const burgerSlice = createSlice({
     },
     resetIngredients: (state) => {
       state.ingredients = initialState.ingredients;
+    },
+    setCurrentIngredient: (state, action: PayloadAction<TIngredient>) => {
+      state.currentIngredient = action.payload;
+    },
+    clearCurrentIngredient: (state) => {
+      state.currentIngredient = null;
     }
   },
   extraReducers: (builder) => {
@@ -136,6 +144,9 @@ export const selectConstructorState = (state: { burger: TBurgerState }) =>
 export const selectOrderState = (state: { burger: TBurgerState }) =>
   state.burger.order;
 
+export const selectCurrentIngredient = (state: { burger: TBurgerState }) =>
+  state.burger.currentIngredient;
+
 export const selectAvailableBuns = createSelector(
   [selectAllIngredients],
   (ingredients) => ingredients.filter((item) => item.type === 'bun')
@@ -151,7 +162,9 @@ export const {
   removeIngredient,
   moveIngredient,
   clearConstructor,
-  resetIngredients
+  resetIngredients,
+  setCurrentIngredient,
+  clearCurrentIngredient
 } = burgerSlice.actions;
 
 export default burgerSlice.reducer;
