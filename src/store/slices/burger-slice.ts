@@ -100,6 +100,9 @@ const burgerSlice = createSlice({
     },
     clearCurrentIngredient: (state) => {
       state.currentIngredient = null;
+    },
+    resetOrder: (state) => {
+      state.order = initialState.order;
     }
   },
   extraReducers: (builder) => {
@@ -164,7 +167,8 @@ export const {
   clearConstructor,
   resetIngredients,
   setCurrentIngredient,
-  clearCurrentIngredient
+  clearCurrentIngredient,
+  resetOrder
 } = burgerSlice.actions;
 
 export default burgerSlice.reducer;
