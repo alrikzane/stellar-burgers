@@ -32,14 +32,6 @@ import { getCookie, deleteCookie } from '../../utils/cookie';
 
 const App = () => {
   const dispatch = useDispatch();
-  const { bun, ingredients } = useSelector(selectConstructorState);
-  const defaultBun = useSelector(selectDefaultBun);
-
-  useEffect(() => {
-    if (defaultBun && !bun) {
-      dispatch(addIngredient(defaultBun));
-    }
-  }, [defaultBun, bun, dispatch]);
   const location = useLocation();
   const navigate = useNavigate();
   const backgroundLocation = location.state?.background;
