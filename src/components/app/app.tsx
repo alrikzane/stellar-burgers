@@ -86,8 +86,8 @@ const App = () => {
         </Route>
 
         {/* modals */}
-        <Route path='/feed/:number' element={<OrderInfo />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
         <Route path='/profile/orders/:number' element={<OrderInfo />} />
       </Routes>
 
@@ -109,6 +109,22 @@ const App = () => {
                   <IngredientDetails />
                 </Modal>
               ) : null
+            }
+          />
+          <Route
+            path='/feed/:number'
+            element={
+              <Modal title='Детали заказа' onClose={() => navigate(-1)}>
+                <OrderInfo />
+              </Modal>
+            }
+          />
+          <Route
+            path='/profile/orders/:number'
+            element={
+              <Modal title='Детали заказа' onClose={() => navigate(-1)}>
+                <OrderInfo />
+              </Modal>
             }
           />
         </Routes>
