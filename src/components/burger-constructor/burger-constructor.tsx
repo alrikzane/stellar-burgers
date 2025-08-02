@@ -10,6 +10,7 @@ import {
   resetOrder
 } from '../../store/slices/burger-slice';
 import { selectUser } from '../../store/slices/user-slice';
+import { clearConstructor } from '../../store/slices/burger-slice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,12 @@ export const BurgerConstructor: FC = () => {
   const { bun, ingredients } = useSelector(selectConstructorState);
   const { status: orderStatus, data: orderData } =
     useSelector(selectOrderState);
+
+  useEffect(() => {
+    if (orderStatus === 'succeeded') {
+      dispatch(clearConstructor());
+    }
+  }, [orderStatus, dispatch]);
 
   const onOrderClick = () => {
     if (!bun || orderStatus === 'loading') return;
