@@ -30,12 +30,10 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchFeeds.pending, (state) => {
-        console.log('pending');
         state.isLoading = true;
         state.error = null;
       })
       .addCase(fetchFeeds.fulfilled, (state, action) => {
-        console.log('fulfilled');
         state.isLoading = false;
         state.error = null;
         state.data = action.payload;
