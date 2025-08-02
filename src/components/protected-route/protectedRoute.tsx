@@ -33,5 +33,9 @@ export const ProtectedRoute = ({
     return <Preloader />;
   }
 
-  return user ? children || <Outlet /> : <Navigate to='/login' replace />;
+  return user ? (
+    children || <Outlet />
+  ) : (
+    <Navigate to='/login' state={{ from: location }} replace />
+  );
 };
