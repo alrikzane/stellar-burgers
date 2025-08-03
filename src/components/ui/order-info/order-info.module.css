@@ -4,6 +4,8 @@
 }
 .number {
   text-align: center;
+  padding-top: 20px;
+  display: block;
 }
 
 .status {

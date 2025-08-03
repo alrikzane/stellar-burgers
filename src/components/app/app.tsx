@@ -90,7 +90,7 @@ const App = () => {
             element={
               location.state?.ingredient ? (
                 <Modal
-                  title='Описание ингредиента'
+                  title='Детали ингредиента'
                   onClose={() => {
                     navigate(backgroundLocation.pathname, {
                       state: backgroundLocation.state,
