@@ -28,5 +28,12 @@
       "@selectors": ["src/store/selectors"]
     }
   },
-  "include": ["src", "cypress/**/*.ts"]
+  "include": ["src", "cypress/**/*.ts"],
+  "exclude": [
+    "./cypress.config.ts",
+    "node_modules",
+    "cypress",
+    "**/*.cy.tsx",
+    "**/*.spec.ts" // если используете Cypress component tests
+  ]
 }
