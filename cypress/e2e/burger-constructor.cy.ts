@@ -15,22 +15,28 @@ describe('Перехват запроса на эндпоинт api/ingredients'
     cy.get('[data-ingredient="sauce"]').should('exist');
   });
 
-  it('Добавляет булку в конструктор', () => {
+  it('Добавляет булку в конструктор и проверяем до и после', () => {
+    cy.get('[data-constructor="bun-top"]').should('not.exist');
+    cy.get('[data-constructor="bun-bottom"]').should('not.exist');
+
     cy.get('[data-ingredient="bun"]').first()
       .find('button')
       .click();
+
     cy.get('[data-constructor="bun-top"]').should('exist');
     cy.get('[data-constructor="bun-bottom"]').should('exist');
   });
 
-  it('Добавляет начинку в конструктор', () => {
+  it('Добавляет начинку в конструктор и проверяем до и после', () => {
+    cy.get('[data-constructor="main"]').should('not.exist');
     cy.get('[data-ingredient="main"]').first()
       .find('button')
       .click();
     cy.get('[data-constructor="main"]').should('exist');    
   });
 
-  it('Добавляет соус в конструктор', () => {
+  it('Добавляет соус в конструктор и проверяем до и после', () => {
+    cy.get('[data-constructor="sauce"]').should('not.exist');
     cy.get('[data-ingredient="sauce"]').first()
       .find('button')
       .click();
@@ -39,31 +45,40 @@ describe('Перехват запроса на эндпоинт api/ingredients'
 
   // тестирование модальных окон
   it('Открывает, перезагружает и закрывает модальное окно ингредиента', () => {
-    // 1. Открытие модалки
-    cy.get('[data-ingredient="bun"]').first().click();
-    cy.get('[data-modal="open-modal"]')
-    .should('exist')
-    .and('be.visible');
+    // Находим ингредиент и назначаем ему алиас
+    cy.get('[data-ingredient="bun"]').first().as('targetIngredient');
 
-    // 2. Перезагрузка страницы
+    // Сохраняем названиев в алиас как текстовое значение
+    cy.get('@targetIngredient')
+      .find('[data-test-id="ingredient-name"]')
+      .invoke('text')
+      .as('ingredientNameText');
+
+    // Кликаем и проверяем, что это тот же элемент
+    cy.then(function() {
+      cy.get('@targetIngredient').click();
+      cy.get('[data-modal="open-modal"]').should('contain', this.ingredientNameText);
+    });
+
+    // Перезагрузка страницы
     cy.reload();
     cy.get('[data-modal="open-modal"]')
     .should('exist')
     .and('be.visible');
 
-    // 3. Закрытие модалки
+    // Закрытие модалки
     cy.get('[data-modal="close-modal-button"]').click();
     cy.get('[data-modal="open-modal"]')
     .should('not.exist');
     
     cy.get('[data-ingredient="bun"]').first().click();
-    // 4. Закрытие оверлеем
+    // Закрытие оверлеем
     cy.get('[data-modal="overlay"]').click({ force: true });
     cy.get('[data-modal="open-modal"]')
     .should('not.exist');
 
     cy.get('[data-ingredient="bun"]').first().click();
-    // 5. Закрытие на кнопку Esc
+    // Закрытие на кнопку Esc
     cy.get('[data-modal="overlay"]').click({ force: true });
     cy.get('body').type('{esc}');
     cy.get('[data-modal="open-modal"]')

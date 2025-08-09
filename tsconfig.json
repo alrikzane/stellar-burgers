@@ -15,7 +15,7 @@
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    "types": ["node", "jest", "cypress"],
+    "types": ["jest"],
     "baseUrl": ".",
     "paths": {
       "@pages": ["src/pages"],
@@ -28,12 +28,6 @@
       "@selectors": ["src/store/selectors"]
     }
   },
-  "include": ["src", "cypress/**/*.ts"],
-  "exclude": [
-    "./cypress.config.ts",
-    "node_modules",
-    "cypress",
-    "**/*.cy.tsx",
-    "**/*.spec.ts" // если используете Cypress component tests
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
