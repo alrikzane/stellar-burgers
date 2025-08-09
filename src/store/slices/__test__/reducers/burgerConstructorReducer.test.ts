@@ -140,19 +140,19 @@ describe('Тестирование асинхронных экшенов', () =>
     it('должен обрабатывать pending состояние', () => {
       const action = { type: fetchIngredients.pending.type };
       const state = burgerReducer(initialState, action);
-      
+
       expect(state.ingredients.loading).toBe(true);
       expect(state.ingredients.error).toBeNull();
     });
 
     it('должен обрабатывать fulfilled состояние', () => {
       const ingredients = [mockBun, mockMain, mockSauce];
-      const action = { 
+      const action = {
         type: fetchIngredients.fulfilled.type,
         payload: ingredients
       };
       const state = burgerReducer(initialState, action);
-      
+
       expect(state.ingredients.loading).toBe(false);
       expect(state.ingredients.data).toEqual(ingredients);
       expect(state.ingredients.lastFetched).not.toBeNull();
@@ -160,12 +160,12 @@ describe('Тестирование асинхронных экшенов', () =>
 
     it('должен обрабатывать rejected состояние', () => {
       const errorMessage = 'Failed to fetch';
-      const action = { 
+      const action = {
         type: fetchIngredients.rejected.type,
         error: { message: errorMessage }
       };
       const state = burgerReducer(initialState, action);
-      
+
       expect(state.ingredients.loading).toBe(false);
       expect(state.ingredients.error).toBe(errorMessage);
     });
@@ -175,18 +175,18 @@ describe('Тестирование асинхронных экшенов', () =>
     it('должен обрабатывать pending состояние', () => {
       const action = { type: createOrder.pending.type };
       const state = burgerReducer(initialState, action);
-      
+
       expect(state.order.status).toBe('loading');
     });
 
     it('должен обрабатывать fulfilled состояние', () => {
       const mockOrder = { number: 12345 };
-      const action = { 
+      const action = {
         type: createOrder.fulfilled.type,
         payload: mockOrder
       };
       const state = burgerReducer(initialState, action);
-      
+
       expect(state.order.status).toBe('succeeded');
       expect(state.order.data).toEqual(mockOrder);
     });
@@ -194,7 +194,7 @@ describe('Тестирование асинхронных экшенов', () =>
     it('должен обрабатывать rejected состояние', () => {
       const action = { type: createOrder.rejected.type };
       const state = burgerReducer(initialState, action);
-      
+
       expect(state.order.status).toBe('failed');
     });
   });
@@ -204,25 +204,25 @@ describe('Тестирование setCurrentIngredient, clearCurrentIngredient 
   it('должен устанавливать текущий ингредиент', () => {
     const action = setCurrentIngredient(mockMain);
     const state = burgerReducer(initialState, action);
-    
+
     expect(state.currentIngredient).toEqual(mockMain);
   });
 
   it('должен очищать текущий ингредиент', () => {
     let state = burgerReducer(initialState, setCurrentIngredient(mockMain));
     state = burgerReducer(state, clearCurrentIngredient());
-    
+
     expect(state.currentIngredient).toBeNull();
   });
 
   it('должен сбрасывать заказ', () => {
     const mockOrder = { number: 12345 };
-    let state = burgerReducer(initialState, { 
+    let state = burgerReducer(initialState, {
       type: createOrder.fulfilled.type,
       payload: mockOrder
     });
     state = burgerReducer(state, resetOrder());
-    
+
     expect(state.order).toEqual(initialState.order);
   });
 });

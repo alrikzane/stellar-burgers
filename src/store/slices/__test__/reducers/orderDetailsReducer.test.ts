@@ -81,10 +81,12 @@ describe('Тестируем Order-details-slice', () => {
     });
 
     it('selectOrderDetailsError должен возвращать ошибку', () => {
-      expect(selectOrderDetailsError({
-        ...testState,
-        orderDetails: { ...testState.orderDetails, error: 'Error' }
-      })).toBe('Error');
+      expect(
+        selectOrderDetailsError({
+          ...testState,
+          orderDetails: { ...testState.orderDetails, error: 'Error' }
+        })
+      ).toBe('Error');
     });
   });
 });

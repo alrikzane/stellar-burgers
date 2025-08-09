@@ -10,22 +10,22 @@ import { TOrder } from '@utils-types';
 
 const mockOrders: TOrder[] = [
   {
-  _id: '100000',
-  status: 'done',
-  name: 'Заказ 10000 кратонский бургер',
-  createdAt: '2025-09-08',
-  updatedAt: '2025-09-08',
-  number: 10000,
-  ingredients: ['ingredient1', 'ingredient2']
+    _id: '100000',
+    status: 'done',
+    name: 'Заказ 10000 кратонский бургер',
+    createdAt: '2025-09-08',
+    updatedAt: '2025-09-08',
+    number: 10000,
+    ingredients: ['ingredient1', 'ingredient2']
   },
   {
-  _id: '100001',
-  status: 'done',
-  name: 'Заказ 10001 кратонский бургер',
-  createdAt: '2025-09-08',
-  updatedAt: '2025-09-08',
-  number: 10001,
-  ingredients: ['ingredient1', 'ingredient3']
+    _id: '100001',
+    status: 'done',
+    name: 'Заказ 10001 кратонский бургер',
+    createdAt: '2025-09-08',
+    updatedAt: '2025-09-08',
+    number: 10001,
+    ingredients: ['ingredient1', 'ingredient3']
   }
 ];
 
@@ -43,7 +43,7 @@ describe('Тестируем order-slice', () => {
     };
     const state = profileOrdersReducer(stateWithOrders, clearProfileOrders());
     expect(state.orders).toEqual([]);
-    expect(state.error).toBe('error'); 
+    expect(state.error).toBe('error');
   });
 
   describe('Тестируем fetchProfileOrders', () => {
@@ -102,7 +102,9 @@ describe('Тестируем order-slice', () => {
           error: 'Failed to fetch orders'
         }
       };
-      expect(selectProfileOrdersError(errorState)).toBe('Failed to fetch orders');
+      expect(selectProfileOrdersError(errorState)).toBe(
+        'Failed to fetch orders'
+      );
     });
   });
 });
