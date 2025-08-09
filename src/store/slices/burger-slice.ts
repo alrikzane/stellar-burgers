@@ -26,7 +26,7 @@ type TBurgerState = {
   currentIngredient: TIngredient | null;
 };
 
-const initialState: TBurgerState = {
+export const initialState: TBurgerState = {
   ingredients: {
     data: [],
     loading: false,

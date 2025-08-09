@@ -1,0 +1,37 @@
+{
+  "success": true,
+  "name": "Краторный био-марсианский бургер",
+  "order": {
+    "ingredients": [
+      {
+        "_id": "643d69a5c3f7b9001cfa093c",
+        "name": "Краторная булка N-200i",
+        "type": "bun",
+        "price": 1255
+      },
+      {
+        "_id": "643d69a5c3f7b9001cfa0941",
+        "name": "Биокотлета из марсианской Магнолии",
+        "type": "main",
+        "price": 424
+      },
+      {
+        "_id": "643d69a5c3f7b9001cfa093c",
+        "name": "Краторная булка N-200i",
+        "type": "bun",
+        "price": 1255
+      }
+    ],
+    "_id": "6895e3f8673086001ba81dc5",
+    "owner": {
+      "name": "testUser",
+      "email": "test@example.com"
+    },
+    "status": "done",
+    "name": "Краторный био-марсианский бургер",
+    "createdAt": "2025-08-08T11:48:08.479Z",
+    "updatedAt": "2025-08-08T11:48:09.375Z",
+    "number": 10000,
+    "price": 2934
+  }
+}

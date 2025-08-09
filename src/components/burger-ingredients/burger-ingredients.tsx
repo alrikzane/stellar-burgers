@@ -10,6 +10,7 @@ import {
 
 export const BurgerIngredients: FC = () => {
   const ingredients = useSelector(selectAllIngredients);
+  console.log(ingredients);
   const isLoading = useSelector(selectIngredientsLoading);
   const error = useSelector((state) => state.burger.ingredients.error);
 
