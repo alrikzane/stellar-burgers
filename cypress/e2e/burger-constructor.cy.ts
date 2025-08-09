@@ -88,13 +88,14 @@ describe('Перехват запроса на эндпоинт api/ingredients'
 
 describe('Создание заказа', () => {
   beforeEach(() => {
+    // Устанавливаем моковые токены авторизации.
+    cy.setCookie('accessToken', 'test-token');
+    localStorage.setItem('refreshToken', 'fake-refresh-token');    
     // Мокируем все необходимые запросы
     cy.intercept('GET', '**/api/ingredients', { fixture: 'ingredients.json' }).as('getIngredients');
     cy.intercept('GET', '**/api/auth/user', { fixture: 'user.json' }).as('getUser');
     cy.intercept('POST', '**/api/orders', { fixture: 'order.json' }).as('createOrder');
     
-    // Устанавливаем моковые токены авторизации.
-    cy.setCookie('accessToken', 'test-token');    
 
     cy.visit('/');
     cy.wait('@getIngredients');
@@ -121,18 +122,22 @@ describe('Создание заказа', () => {
     // Новое модальное окно должно содержать номер заказа из order.json
     cy.fixture('order.json').then((order) => {
       cy.get('#modals h2:first-of-type')
-      .should('have.text', order.order.number.toString());
-    
-    cy.get('[data-modal="close-modal-button"]').click();
-    cy.get('[data-modal="open-modal"]')
-    .should('not.exist');
+        .should('have.text', order.order.number.toString());
+      
+      cy.get('[data-modal="close-modal-button"]').click();
+      cy.get('[data-modal="open-modal"]')
+        .should('not.exist');
 
-    cy.get('[data-constructor="bun-top"]').should('not.exist');
-    cy.get('[data-constructor="bun-bottom"]').should('not.exist');
-    cy.get('[data-constructor="main"]').should('not.exist');
-    cy.get('[data-constructor="sauce"]').should('not.exist');
-    cy.contains('Выберите булки').should('exist');
-    cy.contains('Выберите начинку').should('exist');
-});
+      cy.get('[data-constructor="bun-top"]').should('not.exist');
+      cy.get('[data-constructor="bun-bottom"]').should('not.exist');
+      cy.get('[data-constructor="main"]').should('not.exist');
+      cy.get('[data-constructor="sauce"]').should('not.exist');
+      cy.contains('Выберите булки').should('exist');
+      cy.contains('Выберите начинку').should('exist');
+    });  
+  });
+  afterEach(() => {
+    cy.clearCookie('accessToken');
+    localStorage.removeItem('refreshToken');
   });
 });
