@@ -15,7 +15,7 @@
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    "types": ["node", "jest"],
+    "types": ["jest"],
     "baseUrl": ".",
     "paths": {
       "@pages": ["src/pages"],
@@ -28,5 +28,6 @@
       "@selectors": ["src/store/selectors"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
